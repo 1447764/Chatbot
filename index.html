@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Instagram Style Chatbot</title>
+    <style>
+        @font-face {
+            font-family: 'MaruBuri';
+            src: url(https://hangeul.pstatic.net/hangeul_static/webfont/MaruBuri/MaruBuri-Regular.eot);
+            src: url(https://hangeul.pstatic.net/hangeul_static/webfont/MaruBuri/MaruBuri-Regular.eot?#iefix) format("embedded-opentype"), url(https://hangeul.pstatic.net/hangeul_static/webfont/MaruBuri/MaruBuri-Regular.woff2) format("woff2"), url(https://hangeul.pstatic.net/hangeul_static/webfont/MaruBuri/MaruBuri-Regular.woff) format("woff"), url(https://hangeul.pstatic.net/hangeul_static/webfont/MaruBuri/MaruBuri-Regular.ttf) format("truetype");
+            font-weight: normal;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'MaruBuriSemiBold';
+            src: url(https://hangeul.pstatic.net/hangeul_static/webfont/MaruBuri/MaruBuri-SemiBold.eot);
+            src: url(https://hangeul.pstatic.net/hangeul_static/webfont/MaruBuri/MaruBuri-SemiBold.eot?#iefix) format("embedded-opentype"), url(https://hangeul.pstatic.net/hangeul_static/webfont/MaruBuri/MaruBuri-SemiBold.woff2) format("woff2"), url(https://hangeul.pstatic.net/hangeul_static/webfont/MaruBuri/MaruBuri-SemiBold.woff) format("woff"), url(https://hangeul.pstatic.net/hangeul_static/webfont/MaruBuri/MaruBuri-SemiBold.ttf) format("truetype");
+        }
+        @font-face {
+            font-family: 'MaruBuriBold';
+            src: url(https://hangeul.pstatic.net/hangeul_static/webfont/MaruBuri/MaruBuri-Bold.eot);
+            src: url(https://hangeul.pstatic.net/hangeul_static/webfont/MaruBuri/MaruBuri-Bold.eot?#iefix) format("embedded-opentype"), url(https://hangeul.pstatic.net/hangeul_static/webfont/MaruBuri/MaruBuri-Bold.woff2) format("woff2"), url(https://hangeul.pstatic.net/hangeul_static/webfont/MaruBuri/MaruBuri-Bold.woff) format("woff"), url(https://hangeul.pstatic.net/hangeul_static/webfont/MaruBuri/MaruBuri-Bold.ttf) format("truetype");
+        }
+        @font-face {
+            font-family: 'MaruBuriLight';
+            src: url(https://hangeul.pstatic.net/hangeul_static/webfont/MaruBuri/MaruBuri-Light.eot);
+            src: url(https://hangeul.pstatic.net/hangeul_static/webfont/MaruBuri/MaruBuri-Light.eot?#iefix) format("embedded-opentype"), url(https://hangeul.pstatic.net/hangeul_static/webfont/MaruBuri/MaruBuri-Light.woff2) format("woff2"), url(https://hangeul.pstatic.net/hangeul_static/webfont/MaruBuri/MaruBuri-Light.woff) format("woff"), url(https://hangeul.pstatic.net/hangeul_static/webfont/MaruBuri/MaruBuri-Light.ttf) format("truetype");
+        }
+        @font-face {
+            font-family: 'MaruBuriExtraLight';
+            src: url(https://hangeul.pstatic.net/hangeul_static/webfont/MaruBuri/MaruBuri-ExtraLight.eot);
+            src: url(https://hangeul.pstatic.net/hangeul_static/webfont/MaruBuri/MaruBuri-ExtraLight.eot?#iefix) format("embedded-opentype"), url(https://hangeul.pstatic.net/hangeul_static/webfont/MaruBuri/MaruBuri-ExtraLight.woff2) format("woff2"), url(https://hangeul.pstatic.net/hangeul_static/webfont/MaruBuri/MaruBuri-ExtraLight.woff) format("woff"), url(https://hangeul.pstatic.net/hangeul_static/webfont/MaruBuri/MaruBuri-ExtraLight.ttf) format("truetype");
+        }
+        @font-face {
+            font-family: 'PyeojinGothic-Bold';
+            src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2504-1@1.0/PyeojinGothic-Bold.woff2') format('woff2');
+            font-weight: 700;
+            font-style: normal;
+        }
+        body {
+            background: linear-gradient(135deg, #f9ce34 0%, #ee2a7b 50%, #6228d7 100%);
+            font-family: 'Segoe UI', 'Malgun Gothic', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .chat-container {
+            width: 420px;
+            max-width: 98vw;
+            margin: 48px auto;
+            background: rgba(255,255,255,0.95);
+            border-radius: 24px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+            display: flex;
+            flex-direction: column;
+            height: 700px;
+            border: none;
+            overflow: hidden;
+        }
+        .chat-header {
+            background: linear-gradient(90deg, #f9ce34 0%, #ee2a7b 60%, #6228d7 100%);
+            color: #fff;
+            padding: 22px 28px;
+            border-radius: 24px 24px 0 0;
+            font-size: 1.5em;
+            font-weight: bold;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .chat-header .insta-logo {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2em;
+            color: #ee2a7b;
+            font-weight: bold;
+        }
+        .chat-messages {
+            flex: 1;
+            padding: 28px 18px 18px 18px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            background: transparent;
+        }
+        .message-row {
+            display: flex;
+            align-items: flex-end;
+            gap: 10px;
+        }
+        .message-row.user {
+            flex-direction: row-reverse;
+        }
+        .message-bubble {
+            max-width: 65%;
+            padding: 13px 20px;
+            border-radius: 22px; /* 모든 코너를 동일하게 둥글게 */
+            font-size: 1.08em;
+            line-height: 1.7;
+            word-break: break-word;
+            font-weight: 500;
+            position: relative;
+            display: flex;
+            align-items: flex-end;
+            /* PyeojinGothic-Bold 폰트 적용 */
+            font-family: 'PyeojinGothic-Bold', 'Segoe UI', 'Malgun Gothic', Arial, sans-serif;
+        }
+        .user .message-bubble {
+            background: #f9ce34;
+            color: #222;
+            border: none;
+            box-shadow: 0 2px 8px rgba(249,206,52,0.18);
+        }
+        .bot .message-bubble {
+            background: #fff;
+            color: #222;
+            border: 2px solid #ee2a7b;
+            box-shadow: 0 2px 12px rgba(98,40,215,0.10);
+        }
+        .message-time {
+            font-size: 0.82em;
+            color: #b48fd7;
+            margin: 0 4px;
+            min-width: 56px;
+            text-align: right;
+            font-weight: 400;
+            align-self: flex-end;
+            white-space: nowrap;
+        }
+        .user .message-time {
+            margin-left: 8px;
+        }
+        .bot .message-time {
+            margin-right: 8px;
+        }
+        .typing {
+            display: inline-block;
+            min-width: 30px;
+            height: 16px;
+            vertical-align: middle;
+        }
+        .typing span {
+            display: inline-block;
+            width: 7px;
+            height: 7px;
+            margin: 0 1.5px;
+            background: #ee2a7b;
+            border-radius: 50%;
+            opacity: 0.7;
+            animation: blink 1.4s infinite both;
+        }
+        .typing span:nth-child(2) { animation-delay: 0.2s; }
+        .typing span:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes blink {
+            0%, 80%, 100% { opacity: 0.7; }
+            40% { opacity: 1; }
+        }
+        .chat-input-area {
+            display: flex;
+            border-top: 1.5px solid #eee;
+            padding: 18px 20px;
+            background: rgba(255,255,255,0.98);
+            border-radius: 0 0 24px 24px;
+        }
+        .chat-input {
+            flex: 1;
+            padding: 13px;
+            border: 1.5px solid #ee2a7b;
+            border-radius: 10px;
+            font-size: 1.08em;
+            outline: none;
+            background: #fff;
+            font-weight: 500;
+            transition: border 0.2s;
+        }
+        .chat-input:focus {
+            border: 1.5px solid #f9ce34;
+        }
+        .send-btn {
+            margin-left: 12px;
+            padding: 13px 28px;
+            background: #ee2a7b;
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.08em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+            border: 1.5px solid #ee2a7b;
+        }
+        .send-btn:hover {
+            background: #f9ce34;
+            color: #222;
+            border: 1.5px solid #f9ce34;
+        }
+        ::selection {
+            background: #ee2a7b22;
+        }
+        @media (max-width: 600px) {
+            .chat-container {
+                width: 100vw;
+                min-width: 0;
+                height: 100vh;
+                margin: 0;
+                border-radius: 0;
+            }
+            .chat-header, .chat-input-area {
+                padding-left: 6px;
+                padding-right: 6px;
+            }
+            .chat-messages {
+                padding: 8px;
+            }
+        }
+        .typing-cursor {
+            display: inline-block;
+            width: 10px;
+            animation: blink-cursor 1s steps(1) infinite;
+            color: #ee2a7b;
+            font-weight: bold;
+            font-size: 1.1em;
+            vertical-align: baseline;
+            margin-left: -2px;
+        }
+        @keyframes blink-cursor {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+        /* 플로팅 버튼 공통 스타일 */
+        .floating-btn {
+            position: fixed;
+            right: 5vw;
+            z-index: 2000;
+            background: #ee2a7b;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 54px;
+            height: 54px;
+            font-size: 1.6em;
+            box-shadow: 0 4px 16px #ee2a7b33;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s, box-shadow 0.2s;
+        }
+        .floating-btn:hover {
+            background: #f9ce34;
+            color: #ee2a7b;
+            box-shadow: 0 6px 24px #f9ce3444;
+        }
+        /* 각 플로팅 버튼 위치 */
+        #reset-float-btn {
+            bottom: 5vh;
+        }
+        #settings-float-btn {
+            bottom: 12vh; /* 초기화 버튼 위로 배치 */
+        }
+        .scroll-bottom-btn {
+            bottom: 20vh;
+            right: 5vw;
+            background: #fff;
+            color: #ee2a7b;
+            border: 2px solid #ee2a7b;
+            font-size: 2em;
+            width: 48px;
+            height: 48px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s;
+            z-index: 2100;
+        }
+        .scroll-bottom-btn.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        @media (max-width: 600px) {
+            .scroll-bottom-btn {
+                width: 38px;
+                height: 38px;
+                font-size: 1.3em;
+                bottom: 18vh;
+            }
+        }
+
+        /* 팝업 공통 스타일 */
+        .popup {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(34,34,34,0.18);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .popup.active {
+            display: flex;
+        }
+        .popup-content {
+            background: #fff;
+            border-radius: 18px;
+            padding: 32px 36px 24px 36px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+            text-align: center;
+            min-width: 220px;
+            font-size: 1.08em;
+            color: #222;
+        }
+        /* 팝업 버튼 공통 스타일 */
+        .popup-btn {
+            margin: 18px 8px 0 8px;
+            padding: 9px 22px;
+            border-radius: 8px;
+            border: none;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            background: #ee2a7b;
+            color: #fff;
+            transition: background 0.2s, color 0.2s;
+        }
+        .popup-btn.cancel {
+            background: #eee;
+            color: #222;
+        }
+        .popup-btn.cancel:hover {
+            background: #f9ce34;
+            color: #222;
+        }
+        .popup-btn:not(.cancel):hover {
+            background: #f9ce34;
+            color: #ee2a7b;
+        }
+
+        /* 설정 팝업 내부 스타일 */
+        .settings-popup-content h3 {
+            margin-top: 0;
+            color: #ee2a7b;
+            text-align: center;
+            font-family: 'MaruBuriBold', sans-serif;
+            font-size: 1.3em;
+            margin-bottom: 25px;
+        }
+        .settings-popup-content label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+            font-size: 0.95em;
+            text-align: left; /* 라벨은 왼쪽 정렬 */
+        }
+        .settings-popup-content textarea,
+        .settings-popup-content input[type="number"] {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 0.95em;
+            resize: vertical;
+            font-family: 'Segoe UI', 'Malgun Gothic', Arial, sans-serif;
+        }
+        /* 모바일 반응형 */
+        @media (max-width: 600px) {
+            .popup-content {
+                padding: 18px 8vw 12px 8vw;
+                min-width: 0;
+            }
+            .floating-btn {
+                width: 48px;
+                height: 48px;
+                font-size: 1.4em;
+            }
+            #reset-float-btn {
+                bottom: 3vh;
+            }
+            #settings-float-btn {
+                bottom: 10vh;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            <span class="insta-logo">S</span>
+            럭키비키
+        </div>
+        <div class="chat-messages" id="chat-messages"></div>
+        <form class="chat-input-area" id="chat-form" autocomplete="off">
+            <input type="text" class="chat-input" id="chat-input" placeholder="메시지를 입력하세요..." autofocus />
+            <button type="submit" class="send-btn">전송</button>
+        </form>
+    </div>
+
+    <!-- 플로팅 초기화 버튼 -->
+    <button id="reset-float-btn" class="floating-btn" title="전체 초기화">🗑️</button>
+    <!-- 플로팅 설정 버튼 -->
+    <button id="settings-float-btn" class="floating-btn" title="챗봇 설정">⚙️</button>
+    <!-- 최신 메시지로 이동 버튼 -->
+    <button id="scroll-to-bottom-btn" class="floating-btn scroll-bottom-btn" title="최신 메시지로 이동">▼</button>
+
+    <!-- 초기화 팝업 -->
+    <div id="reset-popup" class="popup">
+        <div class="popup-content">
+            <p>모든 채팅 기록을 삭제할까요?</p>
+            <button id="confirm-reset" class="popup-btn">초기화</button>
+            <button id="cancel-reset" class="popup-btn cancel">취소</button>
+        </div>
+    </div>
+
+    <!-- 설정 팝업 -->
+    <div id="settings-popup" class="popup">
+        <div class="popup-content settings-popup-content">
+            <h3>💬 챗봇 설정</h3>
+            <label for="persona-input">챗봇 성격/말투 설정:</label>
+            <textarea id="persona-input" rows="4" placeholder="챗봇의 성격이나 말투를 정의해주세요. 예: '당신은 친절하고 유머러스한 친구 같은 챗봇입니다. 모든 답변은 '~요'로 끝나게 해주세요.'">당신은 사용자에게 친절하고 유익한 정보를 제공하는 AI 챗봇입니다. 항상 예의 바르고 긍정적인 태도를 유지하며, 사람이 대화하는 것처럼 자연스럽게 답변해주세요. 간결하고 명확하게 핵심을 전달하며, 존댓말을 사용해주세요.</textarea>
+            <label for="max-length-input">최대 답변 글자수 (대략):</label>
+            <input type="number" id="max-length-input" value="500" min="50" max="1000" step="50" />
+            <button id="apply-settings" class="popup-btn">적용</button>
+            <button id="cancel-settings" class="popup-btn cancel">취소</button>
+        </div>
+    </div>
+
+    <style>
+        /* ...기존 스타일... */
+        .scroll-bottom-btn {
+            bottom: 20vh;
+            right: 5vw;
+            background: #fff;
+            color: #ee2a7b;
+            border: 2px solid #ee2a7b;
+            font-size: 2em;
+            width: 48px;
+            height: 48px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s;
+            z-index: 2100;
+        }
+        .scroll-bottom-btn.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        @media (max-width: 600px) {
+            .scroll-bottom-btn {
+                width: 38px;
+                height: 38px;
+                font-size: 1.3em;
+                bottom: 18vh;
+            }
+        }
+    </style>
+
+    <script>
+        const chatMessages = document.getElementById('chat-messages');
+        const chatForm = document.getElementById('chat-form');
+        const chatInput = document.getElementById('chat-input');
+
+        // 설정 관련 요소
+        const personaInput = document.getElementById('persona-input');
+        const maxLengthInput = document.getElementById('max-length-input');
+        
+        let chatHistory = []; // 채팅 기록을 저장할 배열
+
+        // 설정 값 저장 변수 (팝업 닫을 때 적용 또는 취소 시 되돌리기 위해)
+        let savedPersona = personaInput.value;
+        let savedMaxLength = maxLengthInput.value;
+
+        // 최신 메시지로 이동 버튼
+        const scrollToBottomBtn = document.getElementById('scroll-to-bottom-btn');
+
+        // 시간 포맷 함수 (오후 5:50)
+        function getTimeString() {
+            const now = new Date();
+            let h = now.getHours();
+            const m = now.getMinutes().toString().padStart(2, '0');
+            const pm = h >= 12 ? "오후" : "오전";
+            h = h % 12;
+            if (h === 0) h = 12;
+            return `${pm} ${h}:${m}`;
+        }
+
+        // 말풍선 추가 함수
+        function appendMessage(text, sender, isTyping = false) {
+            const row = document.createElement('div');
+            row.className = 'message-row ' + sender;
+
+            const bubble = document.createElement('div');
+            bubble.className = 'message-bubble';
+
+            const time = document.createElement('span');
+            time.className = 'message-time';
+            time.textContent = getTimeString();
+
+            if (isTyping) {
+                bubble.innerHTML = `<span class="typing"><span></span><span></span><span></span>`;
+            } else {
+                bubble.textContent = text;
+                // 실제 메시지가 추가될 때만 채팅 기록에 추가
+                updateChatHistory(text, sender);
+            }
+
+            row.appendChild(bubble);
+            row.appendChild(time);
+            chatMessages.appendChild(row);
+
+            // 자동 스크롤 (항상 최신 메시지로)
+            scrollToBottom();
+
+            return bubble;
+        }
+
+        // 채팅 기록을 업데이트하는 함수
+        function updateChatHistory(text, sender) {
+            chatHistory.push({
+                role: sender === 'user' ? 'user' : 'model',
+                parts: [{ text: text }]
+            });
+        }
+
+        // 한글자씩 타이핑 효과 + 커서
+        function typeTextEffect(bubble, text, callback) {
+            let i = 0;
+            bubble.innerHTML = '<span class="typed"></span><span class="typing-cursor">|</span>';
+            const typedSpan = bubble.querySelector('.typed');
+            const cursor = bubble.querySelector('.typing-cursor');
+
+            function type() {
+                if (i < text.length) {
+                    typedSpan.textContent = text.slice(0, i + 1);
+                    i++;
+                    setTimeout(type, 45 + Math.random() * 40);
+                    // 스크롤을 항상 최신으로
+                    scrollToBottom();
+                } else {
+                    typedSpan.textContent = text;
+                    cursor.remove();
+                    if (callback) callback();
+                }
+            }
+            type();
+        }
+
+        // 스크롤을 항상 최신으로 이동
+        function scrollToBottom() {
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // 스크롤 위치에 따라 "최신 메시지로" 버튼 표시
+        chatMessages.addEventListener('scroll', () => {
+            // 60px 이상 위로 스크롤하면 버튼 표시
+            if (chatMessages.scrollTop + chatMessages.clientHeight < chatMessages.scrollHeight - 60) {
+                scrollToBottomBtn.classList.add('active');
+            } else {
+                scrollToBottomBtn.classList.remove('active');
+            }
+        });
+
+        // "최신 메시지로" 버튼 클릭 시
+        scrollToBottomBtn.addEventListener('click', () => {
+            scrollToBottom();
+        });
+
+        // 챗봇의 응답 로직
+        async function botReply(userText) {
+            const bubble = appendMessage("", 'bot', true); // 타이핑 애니메이션 먼저 추가
+            try {
+                const reply = await fetchGeminiReply(userText);
+                setTimeout(() => {
+                    typeTextEffect(bubble, reply);
+                }, 600 + Math.random() * 400);
+            } catch (error) {
+                console.error("챗봇 응답 오류:", error);
+                setTimeout(() => {
+                    typeTextEffect(bubble, "죄송합니다. 챗봇이 응답할 수 없습니다. 잠시 후 다시 시도해주세요.");
+                }, 600 + Math.random() * 400);
+            }
+        }
+
+        chatForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const userText = chatInput.value.trim();
+            if (!userText) return;
+            appendMessage(userText, 'user'); // 사용자 메시지 추가 및 기록
+            chatInput.value = '';
+            botReply(userText);
+        });
+
+        // ===========================================
+        // 플로팅 버튼 및 팝업 관련 로직
+        // ===========================================
+
+        // 초기화 팝업 관련 요소
+        const resetFloatBtn = document.getElementById('reset-float-btn');
+        const resetPopup = document.getElementById('reset-popup');
+        const confirmReset = document.getElementById('confirm-reset');
+        const cancelReset = document.getElementById('cancel-reset');
+
+        // 설정 팝업 관련 요소
+        const settingsFloatBtn = document.getElementById('settings-float-btn');
+        const settingsPopup = document.getElementById('settings-popup');
+        const applySettingsBtn = document.getElementById('apply-settings');
+        const cancelSettingsBtn = document.getElementById('cancel-settings');
+
+        // 초기화 버튼 클릭 시 팝업 열기
+        resetFloatBtn.addEventListener('click', () => {
+            resetPopup.classList.add('active');
+        });
+
+        // 초기화 팝업에서 취소 클릭 시 팝업 닫기
+        cancelReset.addEventListener('click', () => {
+            resetPopup.classList.remove('active');
+        });
+
+        // 초기화 팝업에서 확인 클릭 시 채팅만 초기화 (설정은 유지)
+        confirmReset.addEventListener('click', () => {
+            document.getElementById('chat-messages').innerHTML = '';
+            chatHistory = []; // 채팅 기록만 초기화
+            resetPopup.classList.remove('active');
+            // 스크롤 최신으로
+            scrollToBottom();
+        });
+
+        // 설정 버튼 클릭 시 설정 팝업 열기
+        settingsFloatBtn.addEventListener('click', () => {
+            savedPersona = personaInput.value;
+            savedMaxLength = maxLengthInput.value;
+            personaInput.value = savedPersona;
+            maxLengthInput.value = savedMaxLength;
+            settingsPopup.classList.add('active');
+        });
+
+        // 설정 팝업에서 '적용' 버튼 클릭 시
+        applySettingsBtn.addEventListener('click', () => {
+            savedPersona = personaInput.value;
+            savedMaxLength = maxLengthInput.value;
+            settingsPopup.classList.remove('active');
+        });
+
+        // 설정 팝업에서 '취소' 버튼 클릭 시
+        cancelSettingsBtn.addEventListener('click', () => {
+            personaInput.value = savedPersona;
+            maxLengthInput.value = savedMaxLength;
+            settingsPopup.classList.remove('active');
+        });
+
+        async function fetchGeminiReply(userText) {
+            // !!! 여기에 본인의 Gemini API 키를 입력하세요 !!!
+            const GEMINI_API_KEY = "진짜제미나이API키"; // <-- 이곳을 실제 키로 교체!
+
+            // 사용할 Gemini 모델 지정 (Gemini 1.5 Flash)
+            const MODEL_NAME = "gemini-2.0-flash"; // 또는 "gemini-1.5-pro"
+
+            const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_NAME}:generateContent?key=${GEMINI_API_KEY}`;
+            
+            // 챗봇 성격 및 말투 설정 (personaInput의 현재 값 사용)
+            const currentPersona = personaInput.value.trim();
+            const maxOutputTokens = parseInt(maxLengthInput.value) || 500;
+            const clampedMaxOutputTokens = Math.max(50, Math.min(maxOutputTokens, 1000));
+
+            // API에 보낼 전체 대화 내용 구성
+            const contents = [
+                {
+                    role: 'user',
+                    parts: [{ text: currentPersona + ` 답변은 대략 ${clampedMaxOutputTokens}자 이내로 해주세요.` }]
+                },
+                {
+                    role: 'model',
+                    parts: [{ text: "네, 알겠습니다! 최선을 다해 답변해 드릴게요." }]
+                },
+                ...chatHistory,
+                {
+                    role: 'user',
+                    parts: [{ text: userText }]
+                }
+            ];
+
+            const requestBody = {
+                contents: contents,
+                generationConfig: {
+                    maxOutputTokens: clampedMaxOutputTokens,
+                    temperature: 0.7,
+                    topP: 0.9,
+                    topK: 40
+                }
+            };
+
+            try {
+                const response = await fetch(endpoint, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(requestBody)
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    console.error("Gemini API 호출 오류 발생:", response.status, response.statusText, errorData);
+                    throw new Error(`Gemini API 오류: ${response.status} ${response.statusText} - ${errorData.error?.message || '알 수 없는 오류'}`);
+                }
+
+                const data = await response.json();
+                const replyRaw = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || "Gemini API 응답 파싱에 실패했습니다.";
+                // 글자수 제한 (띄어쓰기 포함)
+                const reply = replyRaw.length > clampedMaxOutputTokens ? replyRaw.slice(0, clampedMaxOutputTokens) + "…" : replyRaw;
+                return reply;
+            } catch (e) {
+                console.error("fetchGeminiReply 에러:", e);
+                return `Gemini API 호출 중 오류 발생: ${e.message || e}`;
+            }
+        }
+    </script>
+</body>
+</html>
